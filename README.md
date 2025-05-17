@@ -11,7 +11,7 @@ LexiLook is a web application designed to support language learners. The app all
 - Designed for scalability
 
 ## Tech Stack (Planned)
-- Frontend: React / Next.js (shadcn/ui)
+- Frontend: React / Next.js (shadcn)
 - Database: Firebase (Firestore)
 
 ## Goals
