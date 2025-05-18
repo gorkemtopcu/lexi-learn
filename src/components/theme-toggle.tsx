@@ -16,7 +16,7 @@ export function ThemeToggle() {
   }, [])
 
   if (!mounted) {
-    return <Button variant="outline" size="icon" />
+    return <Button variant="outline" size="icon" aria-label="Toggle theme" />
   }
 
   const toggleTheme = () => {
