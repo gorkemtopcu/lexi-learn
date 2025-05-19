@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { BookmarkIcon, Volume2, Info, ChevronDown, ChevronUp } from "lucide-react";
 import { WordData } from "@/services/dictionary/types";
 import { useAudioPlayer } from "@/hooks";
+import { Spinner } from "@/components/ui/spinner";
 
 interface CompactWordDefinitionProps {
   data: WordData | null;
@@ -12,13 +13,15 @@ interface CompactWordDefinitionProps {
   onSave?: () => void;
   onRemove?: () => void;
   error?: string | null;
+  isRemoving?: boolean;
 }
 
 export function CompactWordDefinition({
   data,
   isSaved = true,
   onSave,
-  onRemove
+  onRemove,
+  isRemoving = false
 }: CompactWordDefinitionProps) {
   const [expanded, setExpanded] = useState(false);
   const [showOrigin, setShowOrigin] = useState(false);
@@ -81,8 +84,13 @@ export function CompactWordDefinition({
               title={isSaved ? "Remove from My Words" : "Save to My Words"}
               className="h-8 w-8"
               onClick={isSaved ? onRemove : onSave}
+              disabled={isRemoving}
             >
-              <BookmarkIcon className={`h-3.5 w-3.5 ${isSaved ? "fill-primary" : ""}`} />
+              {isRemoving ? (
+                <Spinner size="sm" />
+              ) : (
+                <BookmarkIcon className={`h-3.5 w-3.5 ${isSaved ? "fill-primary" : ""}`} />
+              )}
             </Button>
           </div>
         </div>

@@ -7,6 +7,7 @@ import { BookOpen, Home, BookmarkIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { AuthButton } from "@/components/auth/auth-button"
 
 export function Navbar() {
   const pathname = usePathname()
@@ -46,7 +47,8 @@ export function Navbar() {
             </Link>
           </nav>
         </div>
-        <div className="flex flex-1 items-center justify-end">
+        <div className="flex flex-1 items-center justify-end gap-3">
+          <AuthButton />
           <ThemeToggle />
         </div>
       </div>
