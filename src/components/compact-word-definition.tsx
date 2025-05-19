@@ -3,13 +3,15 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { BookmarkIcon, Volume2, Info, ChevronDown, ChevronUp } from "lucide-react";
-import { WordData } from "./word-definition";
+import { WordData } from "@/services/dictionary/types";
+import { useAudioPlayer } from "@/hooks";
 
 interface CompactWordDefinitionProps {
-  data: WordData;
+  data: WordData | null;
   isSaved?: boolean;
   onSave?: () => void;
   onRemove?: () => void;
+  error?: string | null;
 }
 
 export function CompactWordDefinition({
@@ -20,20 +22,19 @@ export function CompactWordDefinition({
 }: CompactWordDefinitionProps) {
   const [expanded, setExpanded] = useState(false);
   const [showOrigin, setShowOrigin] = useState(false);
+  const { audioError, handlePlayAudio } = useAudioPlayer();
 
-  const playAudio = (audioUrl: string) => {
-    if (audioUrl) {
-      const audio = new Audio(`https:${audioUrl}`);
-      audio.play().catch(error => console.error("Error playing audio:", error));
-    }
-  };
+  // If data is null or undefined, don't render anything
+  if (!data) {
+    return null;
+  }
 
   // Find the first available audio
   const audioUrl = data.phonetics?.find(p => p.audio)?.audio;
 
   // Get the first definition for compact view
-  const firstDefinition = data.meanings[0]?.definitions[0]?.definition;
-  const partOfSpeech = data.meanings[0]?.partOfSpeech;
+  const firstDefinition = data.meanings?.[0]?.definitions?.[0]?.definition;
+  const partOfSpeech = data.meanings?.[0]?.partOfSpeech;
 
   return (
     <div className="w-full bg-card border rounded-lg overflow-hidden text-left relative">
@@ -67,7 +68,7 @@ export function CompactWordDefinition({
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => playAudio(audioUrl)}
+                onClick={() => handlePlayAudio(audioUrl)}
                 title="Listen to pronunciation"
                 className="h-8 w-8"
               >
@@ -88,10 +89,16 @@ export function CompactWordDefinition({
 
         {!expanded && (
           <div className="mt-0">
-            <p className="text-sm line-clamp-2">{firstDefinition}</p>
+            <p className="text-sm line-clamp-2">{firstDefinition || "No definition available"}</p>
           </div>
         )}
 
+        {/* Display audio error if any */}
+        {audioError && (
+          <div className="mt-2 p-1.5 bg-destructive/10 border border-destructive/30 rounded text-xs text-destructive animate-in fade-in-50 duration-150">
+            {audioError}
+          </div>
+        )}
       </div>
 
       {/* Fixed button at the bottom of the component */}

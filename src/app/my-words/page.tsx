@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { BookmarkIcon, PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { CompactWordDefinition } from "@/components/compact-word-definition";
-import { type WordData } from "@/components/word-definition";
+import { WordData } from "@/services/dictionary/types";
 
 // Mock data for saved words with full API structure
 const savedWords: WordData[] = [
