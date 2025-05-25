@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   description: "A language learning application",
 };
 
-export default function RootLayout({
+export function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -45,3 +45,5 @@ export default function RootLayout({
     </html>
   );
 }
+
+export default RootLayout;

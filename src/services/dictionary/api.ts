@@ -18,48 +18,13 @@ export async function fetchWordDefinition(word: string): Promise<DictionaryServi
     };
   }
 
+  let response: { data: DictionaryApiResponse[] } | null = null;
   try {
-    const response = await axios.get<DictionaryApiResponse[]>(
+    response = await axios.get<DictionaryApiResponse[]>(
       `${API_BASE_URL}/${encodeURIComponent(word.trim())}`
     );
-
-    if (response.data && response.data.length > 0) {
-      try {
-        // Map the API response to our WordData interface
-        const wordData = mapApiResponseToWordData(response.data[0]);
-
-        // Validate that the mapped data has the required fields
-        if (!wordData.word || !wordData.meanings || wordData.meanings.length === 0) {
-          console.warn('API returned incomplete data for word:', word);
-          return {
-            data: null,
-            error: `The dictionary returned incomplete information for "${word}".`
-          };
-        }
-
-        return {
-          data: wordData,
-          error: null
-        };
-      } catch (mappingError) {
-        console.error('Error mapping API response:', mappingError);
-        return {
-          data: null,
-          error: 'Error processing dictionary data. Please try again later.'
-        };
-      }
-    } else {
-      return {
-        data: null,
-        error: `No results found for "${word}".`
-      };
-    }
   } catch (err) {
-    console.error('Error fetching word data:', err);
-
     if (axios.isAxiosError(err)) {
-      // The request was made and the server responded with a status code
-      // that falls out of the range of 2xx
       if (err.response?.status === 404) {
         return {
           data: null,
@@ -70,7 +35,7 @@ export async function fetchWordDefinition(word: string): Promise<DictionaryServi
           data: null,
           error: 'Too many requests to the dictionary API. Please try again in a moment.'
         };
-      } else if (err.response?.status >= 500) {
+      } else if (err.response?.status && err.response.status >= 500) {
         return {
           data: null,
           error: 'The dictionary service is currently unavailable. Please try again later.'
@@ -82,24 +47,47 @@ export async function fetchWordDefinition(word: string): Promise<DictionaryServi
         };
       }
     } else if (err instanceof Error) {
-      // Network errors or other issues
       if (err.message.includes('Network Error')) {
         return {
           data: null,
           error: 'Network error. Please check your internet connection and try again.'
         };
       }
-
       return {
         data: null,
         error: `An error occurred: ${err.message}`
       };
     } else {
-      // Unknown error
       return {
         data: null,
         error: 'An unexpected error occurred. Please try again later.'
       };
     }
+  }
+
+  if (!response || !response.data || response.data.length === 0) {
+    return {
+      data: null,
+      error: `No results found for "${word}".`
+    };
+  }
+
+  try {
+    const wordData = mapApiResponseToWordData(response.data[0]);
+    if (!wordData.word || !wordData.meanings || wordData.meanings.length === 0) {
+      return {
+        data: null,
+        error: `The dictionary returned incomplete information for "${word}".`
+      };
+    }
+    return {
+      data: wordData,
+      error: null
+    };
+  } catch (mappingError) {
+    return {
+      data: null,
+      error: 'Error processing dictionary data. Please try again later.'
+    };
   }
 }

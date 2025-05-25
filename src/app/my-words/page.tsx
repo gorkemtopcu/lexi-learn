@@ -1,4 +1,4 @@
-export default function MyWordsPage() {
+export function MyWordsPage() {
   return (
     <div className="container py-10 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold">My Words</h1>
@@ -8,3 +8,5 @@ export default function MyWordsPage() {
     </div>
   );
 }
+
+export default MyWordsPage;

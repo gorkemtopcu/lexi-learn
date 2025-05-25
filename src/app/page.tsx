@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
@@ -9,7 +9,7 @@ import { WordData } from "@/services/dictionary/types";
 import { fetchWordDefinition } from "@/services/dictionary";
 import { Spinner } from "@/components/ui/spinner";
 
-export default function Home() {
+export function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResult, setSearchResult] = useState<WordData | null>(null);
   const [isSearching, setIsSearching] = useState(false);
@@ -49,7 +49,11 @@ export default function Home() {
   return (
     <div className="container mx-auto px-4">
       <div className="flex flex-col items-center">
-        <div className={`flex flex-col items-center justify-center ${!searchResult ? 'min-h-[calc(100vh-10rem)]' : 'py-8'} text-center`}>
+        <div
+          className={`flex flex-col items-center justify-center ${
+            !searchResult ? "min-h-[calc(100vh-10rem)]" : "py-8"
+          } text-center`}
+        >
           <div className="mb-8 flex items-center">
             <BookOpen className="h-10 w-10 text-primary mr-3" />
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
@@ -71,14 +75,20 @@ export default function Home() {
               disabled={isSearching}
             />
             <Button type="submit" size="icon" disabled={isSearching}>
-              {isSearching ? <Spinner size="sm" className="border-primary-foreground" /> : <Search className="h-4 w-4" />}
+              {isSearching ? (
+                <Spinner size="sm" className="border-primary-foreground" />
+              ) : (
+                <Search className="h-4 w-4" />
+              )}
             </Button>
           </form>
 
           {isSearching && (
             <div className="mt-6 flex flex-col items-center justify-center">
               <Spinner size="md" className="mb-2" />
-              <p className="text-sm text-muted-foreground">Searching dictionary...</p>
+              <p className="text-sm text-muted-foreground">
+                Searching dictionary...
+              </p>
             </div>
           )}
 
@@ -99,3 +109,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default Home;

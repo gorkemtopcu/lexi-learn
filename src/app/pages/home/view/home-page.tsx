@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
 
-export default function Home() {
+export function Home() {
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-3.5rem)] p-8">
       <div className="w-full max-w-md space-y-4">
@@ -24,3 +24,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default Home;

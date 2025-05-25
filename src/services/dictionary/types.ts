@@ -62,7 +62,7 @@ export interface DictionaryApiError {
 }
 
 // Service Result Types
-export type DictionaryServiceResult = {
+export interface DictionaryServiceResult {
   data: WordData | null;
   error: string | null;
-};
+}

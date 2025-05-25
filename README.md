@@ -1,93 +1,105 @@
 # 🌍 LexiLook – A Smarter Way to Learn Words
 
-**LexiLook** is a web app built for curious minds and passionate language learners. Whether you're mastering English or just exploring vocabulary, LexiLook gives you everything you need to truly understand a word—its meaning, usage, grammar, and more.
+**LexiLook** is a fast, type-safe, and accessible web app designed for language learners. Search any word to explore its definition, usage, and structure through a performant, scalable architecture aligned with Next.js App Router standards.
 
 ---
 
-## ✨ What You Can Do with LexiLook
+## ✨ Features
 
-- 🔍 **Search any word** and get clear, concise definitions
-- 🌐 **Translate words** (multi-language support coming soon!)
-- 📚 **Explore examples** of how the word is used in real sentences
-- 🧠 **Understand parts of speech** (noun, verb, adjective, etc.)
-- 🔊 _(Planned)_ Hear correct pronunciations and dive into etymology
-- 🎯 All in a clean, distraction-free interface that keeps learners focused
-
----
-
-## 🛠️ How It Works
-
-LexiLook connects to a free and reliable [dictionary API](https://api.dictionaryapi.dev) to pull real-time data about any word you search. Behind the scenes, it uses a modern, scalable architecture to ensure a smooth and responsive experience every time.
+- 🔍 Lookup any word with real-time results
+- 📚 See definitions, usage examples, and parts of speech
+- 🌐 Multi-language translation support (planned)
+- 🔊 Pronunciation and etymology (upcoming)
+- ⚡ Optimized with Next.js 14, Supabase, and Shadcn UI
+- ♿ Fully accessible, mobile-first responsive design using Tailwind Aria and Radix UI
 
 ---
 
-## 🧱 Built with Love and Powerful Tools
+## 🧱 Tech Stack
 
-- **Frontend:** React + Next.js
-- **UI Components:** [shadcn/ui](https://ui.shadcn.com/) for sleek, accessible design
-- **State Management:** Zustand for managing app-wide state like word history and themes
-- **Backend API:** Modular API routes with Node.js / Next.js
-- **Database:** Supabase – PostgreSQL-based, open-source backend for storing user data and app state
-
----
-
-## ✅ Our Commitment to Quality
-
-We’re serious about code quality and user experience. Here’s how we keep things running smoothly:
-
-### 🧹 Clean & Maintainable Code
-
-- Type-safe code with **TypeScript**
-- Easy-to-read, modular structure
-- Auto-formatting and linting with **ESLint + Prettier**
-
-### 🧪 Tested for Reliability
-
-- Unit & integration tests using **Jest** and **React Testing Library**
-- Full user journey tests with **Cypress** or **Playwright**
-- Continuous Integration (CI) to catch issues before they ship
-
-### 🚀 Optimized for Speed
-
-- Lazy loading and code splitting for faster page loads
-- Optimized Supabase queries with PostgreSQL indexing and real-time support
-- Efficient state handling using Zustand without unnecessary re-renders
-
-### 🔒 Secure by Design
-
-- Input validation on both frontend and backend
-- Secrets and credentials managed through environment variables
-- Built-in Supabase Auth (planned) for user sign-ins and secure access
+- **Frontend:** React, TypeScript, Next.js 14 (App Router)
+- **UI/UX:** Shadcn UI, Radix UI, Tailwind CSS, Tailwind Aria
+- **Backend:** Supabase (PostgreSQL, RLS enabled)
+- **API:** Dictionary API ([docs](https://api.dictionaryapi.dev))
 
 ---
 
-## 🧑‍💻 For Developers & Contributors
+## 🧪 Testing & Validation
 
-LexiLook is built to be **scalable and developer-friendly**. We follow best practices to make sure the project can grow easily and stay maintainable:
-
-- Clear and consistent **feature branching and pull requests**
-- Well-documented **API contracts** and **component structure**
-- Semantic commit messages and organized changelogs
-- Welcoming environment for collaboration and code reviews
-
-If you're interested in contributing or learning from the project, feel free to fork it and explore the codebase. We’re excited to grow LexiLook with the community!
+- **Unit & Integration Testing:** Jest + React Testing Library
+- **E2E Testing:** Playwright
+- **Form Validation:** Zod schemas
+- **Server Actions:** Type-safe with `next-safe-action`, wrapped in `ActionResponse`
 
 ---
 
-## 🗺️ Roadmap (What’s Coming Next)
+## 🔒 Security & Data Integrity
 
-- 🌐 Multi-language support for translations and definitions
-- 🔊 Word pronunciation audio
-- 🕰️ Word history and saved searches
-- 🎨 Themes and accessibility customization
-- 👤 User accounts and personalized learning with Supabase Auth
+- ✅ All inputs validated using Zod before Supabase operations
+- 🔐 Supabase RLS enabled with strict permission checks
+- ⚙️ Server-side Supabase initialized via `createServerComponentClient`
+- 🔧 User authentication managed by `@supabase/auth-helpers-nextjs`
+- 🧩 Errors modeled and returned as typed results using `ActionResponse`
 
 ---
 
-## 🙌 Join Us on the Journey
+## 🧑‍💻 Development Principles
 
-LexiLook is more than a dictionary—it's a **learning companion**. Whether you’re building your vocabulary, writing better, or simply curious about words, LexiLook is here to help.
+- 🧠 Functional, declarative components using `function` keyword
+- ⚙️ Modular file structure (e.g., `components/word-result`, `lib/supabase/fetch-word.ts`)
+- 📁 Use `RORO` (Receive an Object, Return an Object) for utilities
+- 🧹 Early returns and guard clauses for error handling
+- 📦 Avoid `useEffect` and `setState` in favor of RSC and server actions
+- 🧾 Follow type-safe practices: prefer interfaces, avoid enums
+- 🧩 Use named exports and semantic file naming (lowercase with dashes)
 
-We’re still growing, so your feedback means the world. Got a feature idea? Found a bug? Want to help build the future of language learning?
+---
 
-👉 [Open an issue](#) or submit a pull request—we’d love to hear from you!
+## 🚀 Performance
+
+- ⚡ Server-side rendering via Next.js App Router
+- 🧠 Prefetching and lazy loading non-critical components
+- 🖼️ WebP image optimization with native `next/image`
+- 📊 Monitoring LCP, CLS, and FID for Web Vitals
+
+---
+
+## 📁 File Structure (Sample)
+
+```
+app/
+ ├─ page.tsx                    # RSC entry
+ ├─ layout.tsx                  # Root layout
+ ├─ globals.css                 # Tailwind config
+components/
+ ├─ search-bar/                # Search input
+ ├─ word-result/               # Result display
+lib/
+ ├─ supabase/                  # Supabase helpers
+ ├─ validation/                # Zod schemas
+ ├─ actions/                   # next-safe-action implementations
+types/
+ └─ actions.ts                 # ActionResponse type
+```
+
+---
+
+## 🛤️ Roadmap
+
+- 🌐 Multi-language support
+- 🔊 Audio pronunciation
+- 🕰️ Saved search history per user
+- 🎨 User-defined themes and accessibility settings
+- 👤 Auth-protected features with Supabase Auth
+
+---
+
+## 📬 Want to Contribute?
+
+We welcome contributions from developers and language lovers! Fork, open a PR, or create an issue to get involved.
+
+---
+
+## 📎 License
+
+MIT © LexiLook Team
