@@ -1,28 +1,16 @@
-"use client"
+"use client";
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { BookmarkIcon, Volume2, Info, ChevronDown, ChevronUp } from "lucide-react";
+import { Volume2, Info, ChevronDown, ChevronUp } from "lucide-react";
 import { WordData } from "@/services/dictionary/types";
 import { useAudioPlayer } from "@/hooks";
-import { Spinner } from "@/components/ui/spinner";
 
 interface CompactWordDefinitionProps {
   data: WordData | null;
-  isSaved?: boolean;
-  onSave?: () => void;
-  onRemove?: () => void;
-  error?: string | null;
-  isRemoving?: boolean;
 }
 
-export function CompactWordDefinition({
-  data,
-  isSaved = true,
-  onSave,
-  onRemove,
-  isRemoving = false
-}: CompactWordDefinitionProps) {
+export function CompactWordDefinition({ data }: CompactWordDefinitionProps) {
   const [expanded, setExpanded] = useState(false);
   const [showOrigin, setShowOrigin] = useState(false);
   const { audioError, handlePlayAudio } = useAudioPlayer();
@@ -33,7 +21,7 @@ export function CompactWordDefinition({
   }
 
   // Find the first available audio
-  const audioUrl = data.phonetics?.find(p => p.audio)?.audio;
+  const audioUrl = data.phonetics?.find((p) => p.audio)?.audio;
 
   // Get the first definition for compact view
   const firstDefinition = data.meanings?.[0]?.definitions?.[0]?.definition;
@@ -53,16 +41,20 @@ export function CompactWordDefinition({
                 </span>
               )}
             </div>
-            {data.phonetic && <p className="text-sm text-muted-foreground">{data.phonetic}</p>}
+            {data.phonetic && (
+              <p className="text-sm text-muted-foreground">{data.phonetic}</p>
+            )}
           </div>
           <div className="flex gap-1">
-          {expanded && data.origin && (
+            {expanded && data.origin && (
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setShowOrigin(!showOrigin)}
                 title="Show word origin"
-                className={`h-8 w-8 ${showOrigin && expanded ? "bg-primary/10" : ""}`}
+                className={`h-8 w-8 ${
+                  showOrigin && expanded ? "bg-primary/10" : ""
+                }`}
               >
                 <Info className="h-3.5 w-3.5" />
               </Button>
@@ -78,26 +70,14 @@ export function CompactWordDefinition({
                 <Volume2 className="h-3.5 w-3.5" />
               </Button>
             )}
-            <Button
-              variant="ghost"
-              size="icon"
-              title={isSaved ? "Remove from My Words" : "Save to My Words"}
-              className="h-8 w-8"
-              onClick={isSaved ? onRemove : onSave}
-              disabled={isRemoving}
-            >
-              {isRemoving ? (
-                <Spinner size="sm" />
-              ) : (
-                <BookmarkIcon className={`h-3.5 w-3.5 ${isSaved ? "fill-primary" : ""}`} />
-              )}
-            </Button>
           </div>
         </div>
 
         {!expanded && (
           <div className="mt-0">
-            <p className="text-sm line-clamp-2">{firstDefinition || "No definition available"}</p>
+            <p className="text-sm line-clamp-2">
+              {firstDefinition || "No definition available"}
+            </p>
           </div>
         )}
 
@@ -141,7 +121,10 @@ export function CompactWordDefinition({
 
           <div className="space-y-2">
             {data.meanings.map((meaning, index) => (
-              <div key={index} className={`${index === 0 ? "-mt-1 mb-2" : "mb-4"}`}>
+              <div
+                key={index}
+                className={`${index === 0 ? "-mt-1 mb-2" : "mb-4"}`}
+              >
                 <h4 className="text-sm font-semibold mb-1 inline-block bg-primary/10 px-2 py-0.5 rounded-md">
                   {meaning.partOfSpeech}
                 </h4>
@@ -156,7 +139,9 @@ export function CompactWordDefinition({
                       )}
                       {def.synonyms.length > 0 && (
                         <div className="mt-1 pl-1">
-                          <span className="text-xs font-medium">Synonyms: </span>
+                          <span className="text-xs font-medium">
+                            Synonyms:{" "}
+                          </span>
                           <span className="text-xs text-muted-foreground">
                             {def.synonyms.join(", ")}
                           </span>
@@ -164,7 +149,9 @@ export function CompactWordDefinition({
                       )}
                       {def.antonyms.length > 0 && (
                         <div className="mt-1 pl-1">
-                          <span className="text-xs font-medium">Antonyms: </span>
+                          <span className="text-xs font-medium">
+                            Antonyms:{" "}
+                          </span>
                           <span className="text-xs text-muted-foreground">
                             {def.antonyms.join(", ")}
                           </span>
