@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
@@ -32,13 +32,13 @@ export function WordDefinition({ data }: WordDefinitionProps) {
       setIsSaved(false);
       return;
     }
-    
+
     const checkIfWordIsSaved = async () => {
       try {
         const saved = await isWordSaved(user, data.word);
         setIsSaved(saved);
       } catch (err) {
-        console.error('Error checking if word is saved:', err);
+        console.error("Error checking if word is saved:", err);
       }
     };
 
@@ -58,15 +58,15 @@ export function WordDefinition({ data }: WordDefinitionProps) {
       if (isSaved) {
         // For simplicity, we'll just toggle the state here
         // In a real app, you would need to store the word ID
-        await removeWord(user, (data as any).id || '');
+        await removeWord(user, (data as WordData).word || "");
         setIsSaved(false);
       } else {
         await saveWord(user, data!);
         setIsSaved(true);
       }
     } catch (err) {
-      console.error('Error saving/removing word:', err);
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      console.error("Error saving/removing word:", err);
+      setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
       setIsLoading(false);
     }
@@ -78,18 +78,18 @@ export function WordDefinition({ data }: WordDefinitionProps) {
   }
 
   // Find the first available audio
-  const audioUrl = data.phonetics?.find(p => p.audio)?.audio;
+  const audioUrl = data.phonetics?.find((p) => p.audio)?.audio;
 
   // Check if meanings array exists and has content
   const hasMeanings = data.meanings && data.meanings.length > 0;
 
   return (
     <>
-      <AuthDialog 
-        isOpen={isAuthDialogOpen} 
-        onClose={() => setIsAuthDialogOpen(false)} 
+      <AuthDialog
+        isOpen={isAuthDialogOpen}
+        onClose={() => setIsAuthDialogOpen(false)}
       />
-      
+
       <div className="w-full max-w-2xl mx-auto bg-card border rounded-lg p-6 pb-8 mt-4 text-left">
         {error && (
           <div className="mb-4 p-2 bg-destructive/10 border border-destructive/30 rounded text-sm text-destructive animate-in fade-in-50 duration-150 flex items-start gap-2">
@@ -97,11 +97,13 @@ export function WordDefinition({ data }: WordDefinitionProps) {
             <span>{error}</span>
           </div>
         )}
-        
+
         <div className="flex justify-between items-start mb-4">
           <div>
             <h2 className="text-3xl font-bold">{data.word}</h2>
-            {data.phonetic && <p className="text-muted-foreground">{data.phonetic}</p>}
+            {data.phonetic && (
+              <p className="text-muted-foreground">{data.phonetic}</p>
+            )}
           </div>
           <div className="flex gap-2">
             {data.origin && (
@@ -137,7 +139,9 @@ export function WordDefinition({ data }: WordDefinitionProps) {
               {isLoading ? (
                 <Spinner size="sm" />
               ) : (
-                <BookmarkIcon className={`h-4 w-4 ${isSaved ? "fill-primary" : ""}`} />
+                <BookmarkIcon
+                  className={`h-4 w-4 ${isSaved ? "fill-primary" : ""}`}
+                />
               )}
             </Button>
           </div>
@@ -184,7 +188,9 @@ export function WordDefinition({ data }: WordDefinitionProps) {
                         )}
                         {def.synonyms && def.synonyms.length > 0 && (
                           <div className="mt-2 pl-1">
-                            <span className="text-sm font-medium">Synonyms: </span>
+                            <span className="text-sm font-medium">
+                              Synonyms:{" "}
+                            </span>
                             <span className="text-sm text-muted-foreground">
                               {def.synonyms.join(", ")}
                             </span>
@@ -192,7 +198,9 @@ export function WordDefinition({ data }: WordDefinitionProps) {
                         )}
                         {def.antonyms && def.antonyms.length > 0 && (
                           <div className="mt-1 pl-1">
-                            <span className="text-sm font-medium">Antonyms: </span>
+                            <span className="text-sm font-medium">
+                              Antonyms:{" "}
+                            </span>
                             <span className="text-sm text-muted-foreground">
                               {def.antonyms.join(", ")}
                             </span>
@@ -202,7 +210,9 @@ export function WordDefinition({ data }: WordDefinitionProps) {
                     ))}
                   </ol>
                 ) : (
-                  <p className="text-muted-foreground ml-5">No definitions available for this part of speech.</p>
+                  <p className="text-muted-foreground ml-5">
+                    No definitions available for this part of speech.
+                  </p>
                 )}
               </div>
             ))}
