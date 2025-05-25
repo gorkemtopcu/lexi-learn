@@ -1,6 +1,6 @@
-# 🌍 LexiLook – A Smarter Way to Learn Words
+# 🌍 LexiLearn – A Smarter Way to Learn Words
 
-**LexiLook** is a fast, type-safe, and accessible web app designed for language learners. Search any word to explore its definition, usage, and structure through a performant, scalable architecture aligned with Next.js App Router standards.
+**LexiLearn** is a fast, type-safe, and accessible web app designed for language learners. Search any word to explore its definition, usage, and structure through a performant, scalable architecture aligned with Next.js App Router standards.
 
 ---
 
@@ -102,4 +102,4 @@ We welcome contributions from developers and language lovers! Fork, open a PR, o
 
 ## 📎 License
 
-MIT © LexiLook Team
+MIT © LexiLearn Team
