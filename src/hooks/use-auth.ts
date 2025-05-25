@@ -6,14 +6,14 @@ export function useAuth() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Get current user and listen for auth state changes
+  // Restore session and listen for auth state changes
   useEffect(() => {
     let ignore = false;
-    async function getUser() {
-      const { data } = await supabase.auth.getUser();
-      if (!ignore) setUser(data.user ? { email: data.user.email ?? "" } : null);
+    async function restoreSession() {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!ignore) setUser(session?.user ? { email: session.user.email ?? "" } : null);
     }
-    getUser();
+    restoreSession();
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ? { email: session.user.email ?? "" } : null);
     });
