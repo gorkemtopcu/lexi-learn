@@ -7,6 +7,7 @@ import { BookOpen, Home, BookmarkIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { AuthDialog } from "@/components/auth/auth-dialog";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -52,6 +53,7 @@ export function Navbar() {
         </div>
         <div className="flex flex-1 items-center justify-end gap-3">
           <ThemeToggle />
+          <AuthDialog />
         </div>
       </div>
     </header>
