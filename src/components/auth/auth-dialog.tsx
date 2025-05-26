@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
+import { useSavedWordsContext } from "@/contexts/saved-words-context";
 import { SignInForm } from "./sign-in-form";
 import { SignUpForm } from "./sign-up-form";
 import { ProfilePanel } from "./profile-panel";
@@ -18,6 +19,7 @@ export function AuthDialog({ trigger }: { trigger?: React.ReactNode } = {}) {
   const [mode, setMode] = React.useState<"login" | "signup">("login");
   const [open, setOpen] = React.useState(false);
   const { user, loading, error, setError, signIn, signUp, signOut } = useAuth();
+  const { total: wordCount } = useSavedWordsContext();
 
   // Reset mode and error on dialog close
   React.useEffect(() => {
@@ -72,8 +74,7 @@ export function AuthDialog({ trigger }: { trigger?: React.ReactNode } = {}) {
               await signOut();
               setMode("login");
             }}
-            wordCount={42}
-            wordGoal={100}
+            wordCount={wordCount}
           />
         ) : mode === "login" ? (
           <>

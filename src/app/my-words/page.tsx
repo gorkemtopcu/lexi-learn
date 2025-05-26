@@ -2,17 +2,20 @@
 
 import { useAuth } from "@/hooks/use-auth";
 import { AuthDialog } from "@/components/auth/auth-dialog";
-import { BookmarkIcon, LogIn as LogInIcon } from "lucide-react";
+import { BookmarkIcon, LogIn as LogInIcon, Trophy } from "lucide-react";
 import { useSavedWords } from "@/hooks/use-saved-words";
 import Link from "next/link";
 import { Spinner } from "@/components/ui/spinner";
 import { CompactWordDefinition } from "@/components/compact-word-definition";
+import { AchievementsShowcase } from "@/components/achievements-showcase";
 import { getPageList } from "@/utils/pagination";
 import { WordData } from "@/services/dictionary-api/types";
+import { useState } from "react";
 
 export function MyWordsPage() {
   const { user } = useAuth();
   const { words, loading, page, pageSize, total, setPage } = useSavedWords();
+  const [showAchievements, setShowAchievements] = useState(false);
 
   const totalPages = Math.ceil(total / pageSize);
   const pageList = getPageList(page, totalPages);
@@ -22,6 +25,16 @@ export function MyWordsPage() {
       <h1 className="text-3xl font-bold mb-8 flex items-center gap-3 px-1 sm:px-0">
         <BookmarkIcon className="h-8 w-8 text-primary" />
         My Words
+        {user && words.length > 0 && (
+          <button
+            onClick={() => setShowAchievements(!showAchievements)}
+            className="ml-auto flex items-center gap-2 px-3 py-1.5 rounded-md border border-border bg-background text-foreground font-medium shadow-sm transition hover:bg-primary/10 focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"
+            title={showAchievements ? "Hide Achievements" : "Show Achievements"}
+          >
+            <Trophy className="h-4 w-4" />
+            {showAchievements ? "Hide Achievements" : "Show Achievements"}
+          </button>
+        )}
       </h1>
       {!user ? (
         <div className="flex flex-1 flex-col justify-center items-center min-h-[60vh]">
@@ -73,11 +86,20 @@ export function MyWordsPage() {
         </div>
       ) : (
         <>
-          <div className="space-y-6 w-full max-w-2xl mx-auto px-1 sm:px-0">
+          {/* Achievements Showcase */}
+          {showAchievements && (
+            <div className="mb-8">
+              <AchievementsShowcase userWordCount={total} />
+            </div>
+          )}
+
+          {/* Words List */}
+          <div className="space-y-6 w-full max-w-4xl mx-auto px-1 sm:px-0">
             {words.map((word: WordData) => (
               <CompactWordDefinition key={word.word} data={word} />
             ))}
           </div>
+
           {/* Pagination Controls */}
           {totalPages > 1 && (
             <div className="flex flex-col items-center gap-2 mt-8 p-3 rounded-lg bg-muted/40 border border-border/60 w-full max-w-full sm:w-fit sm:flex-row sm:justify-center sm:items-center mx-auto">
