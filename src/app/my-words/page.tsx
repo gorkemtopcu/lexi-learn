@@ -17,6 +17,7 @@ import { AchievementsShowcase } from "@/components/achievements-showcase";
 import { getPageList } from "@/utils/pagination";
 import { WordData } from "@/services/dictionary-api/types";
 import { useState } from "react";
+import { Input } from "@/components/ui/input";
 
 export function MyWordsPage() {
   const { user } = useAuth();
