@@ -110,12 +110,12 @@ export function MyWordsPage() {
             <div className="mb-6 px-1 sm:px-0">
               <form onSubmit={handleSearch} className="flex gap-2">
                 <div className="relative flex-1">
-                  <input
+                  <Input
                     type="text"
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
                     placeholder="Search your saved words..."
-                    className="w-full px-4 py-2 pr-10 rounded-md border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary"
+                    className="w-full px-4 py-2 pr-10 rounded-md"
                   />
                   {searchQuery && (
                     <button
