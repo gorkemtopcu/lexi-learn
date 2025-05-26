@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import {
   getSavedWords,
+  searchSavedWords,
   saveWord as saveWordApi,
   unsaveWord as unsaveWordApi,
 } from "@/services/saved-words/saved-words";
@@ -22,11 +23,15 @@ interface SavedWordsContextValue {
   pageSize: number;
   loading: boolean;
   error: string | null;
+  searchQuery: string;
+  isSearching: boolean;
   isWordSaved: (word: string) => boolean;
   saveWord: (wordData: WordData) => Promise<void>;
   unsaveWord: (word: string) => Promise<void>;
   setPage: (page: number) => void;
   setPageSize: (size: number) => void;
+  searchWords: (query: string) => Promise<void>;
+  clearSearch: () => void;
   refreshSavedWords: () => Promise<void>;
 }
 
@@ -44,6 +49,8 @@ export const SavedWordsProvider: React.FC<{ children: React.ReactNode }> = ({
   const [pageSize, setPageSize] = useState(20);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
 
   const fetchWords = useCallback(async () => {
     if (!user) {
@@ -60,7 +67,12 @@ export const SavedWordsProvider: React.FC<{ children: React.ReactNode }> = ({
         words: fetchedWords,
         total: fetchedTotal,
         error,
-      } = await getSavedWords(user.id, { limit: pageSize, offset });
+      } = searchQuery
+        ? await searchSavedWords(user.id, searchQuery, {
+            limit: pageSize,
+            offset,
+          })
+        : await getSavedWords(user.id, { limit: pageSize, offset });
       if (error) setError(error);
       setWords(fetchedWords);
       setTotal(fetchedTotal);
@@ -71,7 +83,7 @@ export const SavedWordsProvider: React.FC<{ children: React.ReactNode }> = ({
     } finally {
       setLoading(false);
     }
-  }, [user, page, pageSize]);
+  }, [user, page, pageSize, searchQuery]);
 
   useEffect(() => {
     fetchWords();
@@ -89,7 +101,7 @@ export const SavedWordsProvider: React.FC<{ children: React.ReactNode }> = ({
       if (success) {
         // If the word is not in the current page and the page is the first, prepend it
         setWords((prev) => {
-          if (page === 1) {
+          if (page === 1 && !searchQuery) {
             const newList = [wordData, ...prev];
             return newList.slice(0, pageSize);
           }
@@ -98,7 +110,7 @@ export const SavedWordsProvider: React.FC<{ children: React.ReactNode }> = ({
         setTotal((prev) => prev + 1);
       }
     },
-    [user, page, pageSize]
+    [user, page, pageSize, searchQuery]
   );
 
   const unsaveWord = useCallback(
@@ -113,6 +125,18 @@ export const SavedWordsProvider: React.FC<{ children: React.ReactNode }> = ({
     [user]
   );
 
+  const searchWords = useCallback(async (query: string) => {
+    setSearchQuery(query);
+    setPage(1); // Reset to first page when searching
+    setIsSearching(true);
+  }, []);
+
+  const clearSearch = useCallback(() => {
+    setSearchQuery("");
+    setPage(1); // Reset to first page when clearing search
+    setIsSearching(false);
+  }, []);
+
   return (
     <SavedWordsContext.Provider
       value={{
@@ -122,11 +146,15 @@ export const SavedWordsProvider: React.FC<{ children: React.ReactNode }> = ({
         pageSize,
         loading,
         error,
+        searchQuery,
+        isSearching,
         isWordSaved,
         saveWord,
         unsaveWord,
         setPage,
         setPageSize,
+        searchWords,
+        clearSearch,
         refreshSavedWords: fetchWords,
       }}
     >

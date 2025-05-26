@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export interface SignUpFormProps {
   loading: boolean;
@@ -42,7 +43,14 @@ export function SignUpForm({
       return;
     }
     const ok = await signUp(email, password);
-    if (ok) onSuccess();
+    if (ok) {
+      toast.success("Verification email sent!", {
+        description:
+          "Please check your email and verify your account before signing in.",
+        duration: 6000,
+      });
+      onSuccess();
+    }
   }
 
   return (

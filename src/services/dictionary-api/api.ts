@@ -84,7 +84,7 @@ export async function fetchWordDefinition(word: string): Promise<DictionaryServi
       data: wordData,
       error: null
     };
-  } catch (mappingError) {
+  } catch {
     return {
       data: null,
       error: 'Error processing dictionary data. Please try again later.'
