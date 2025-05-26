@@ -2,10 +2,19 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Volume2, Info, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  Volume2,
+  Info,
+  ChevronDown,
+  ChevronUp,
+  Bookmark,
+  BookmarkCheck,
+} from "lucide-react";
 import { WordData } from "@/services/dictionary-api/types";
 import { playAudio } from "@/utils/audio";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/use-auth";
+import { useSavedWordsContext } from "@/contexts/saved-words-context";
 
 interface CompactWordDefinitionProps {
   data: WordData | null;
@@ -14,6 +23,14 @@ interface CompactWordDefinitionProps {
 export function CompactWordDefinition({ data }: CompactWordDefinitionProps) {
   const [expanded, setExpanded] = useState(false);
   const [showOrigin, setShowOrigin] = useState(false);
+  const { user } = useAuth();
+  const {
+    isWordSaved,
+    saveWord,
+    unsaveWord,
+    loading: savedLoading,
+  } = useSavedWordsContext();
+  const [actionLoading, setActionLoading] = useState(false);
 
   // If data is null or undefined, don't render anything
   if (!data) {
@@ -28,7 +45,7 @@ export function CompactWordDefinition({ data }: CompactWordDefinitionProps) {
   const partOfSpeech = data.meanings?.[0]?.partOfSpeech;
 
   return (
-    <div className="w-full bg-card border rounded-lg overflow-hidden text-left relative">
+    <div className="w-full bg-card border rounded-lg overflow-hidden text-left relative px-1 sm:px-0">
       {/* Compact View */}
       <div className={`p-4 ${expanded ? "pb-4" : "pb-14"}`}>
         <div className="flex justify-between items-start mb-1">
@@ -45,37 +62,71 @@ export function CompactWordDefinition({ data }: CompactWordDefinitionProps) {
               <p className="text-sm text-muted-foreground">{data.phonetic}</p>
             )}
           </div>
-          <div className="flex gap-1">
+          <div className="flex gap-2">
             {expanded && data.origin && (
               <Button
-                variant="ghost"
+                variant="outline"
                 size="icon"
                 onClick={() => setShowOrigin(!showOrigin)}
                 title="Show word origin"
-                className={`h-8 w-8 ${
-                  showOrigin && expanded ? "bg-primary/10" : ""
-                }`}
+                className={showOrigin && expanded ? "bg-primary/10" : ""}
               >
-                <Info className="h-3.5 w-3.5" />
+                <Info className="h-4 w-4" />
               </Button>
             )}
             {audioUrl && (
               <Button
-                variant="ghost"
+                variant="outline"
                 size="icon"
                 onClick={async () => {
                   try {
                     await playAudio(audioUrl);
-                  } catch {
+                  } catch (err) {
                     toast.error("Failed to play audio. Please try again.");
+                    console.error("Failed to play audio:", err);
                   }
                 }}
                 title="Listen to pronunciation"
-                className="h-8 w-8"
+                aria-label="Play pronunciation"
               >
-                <Volume2 className="h-3.5 w-3.5" />
+                <Volume2 className="h-4 w-4" />
               </Button>
             )}
+            <Button
+              variant="outline"
+              size="icon"
+              title={isWordSaved(data.word) ? "Unsave word" : "Save word"}
+              aria-label={isWordSaved(data.word) ? "Unsave word" : "Save word"}
+              onClick={async () => {
+                if (!user) {
+                  toast.error("Sign in to save words.");
+                  return;
+                }
+                setActionLoading(true);
+                try {
+                  if (isWordSaved(data.word)) {
+                    await unsaveWord(data.word);
+                    toast.success("Word removed from your saved words.");
+                  } else {
+                    await saveWord(data);
+                    toast.success("Word saved!");
+                  }
+                } catch (err) {
+                  toast.error(
+                    (err as Error).message || "Failed to update saved word."
+                  );
+                } finally {
+                  setActionLoading(false);
+                }
+              }}
+              disabled={actionLoading || savedLoading}
+            >
+              {isWordSaved(data.word) ? (
+                <BookmarkCheck className="h-4 w-4 text-primary" />
+              ) : (
+                <Bookmark className="h-4 w-4" />
+              )}
+            </Button>
           </div>
         </div>
 

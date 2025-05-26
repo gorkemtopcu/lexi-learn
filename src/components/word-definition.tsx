@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Volume2, Info, Bookmark } from "lucide-react";
+import { Volume2, Info, Bookmark, BookmarkCheck } from "lucide-react";
 import { WordData } from "@/services/dictionary-api/types";
 import { playAudio } from "@/utils/audio";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/use-auth";
+import { useSavedWords } from "@/hooks/use-saved-words";
 
 // Re-export WordData for backward compatibility
 export type { WordData };
@@ -16,6 +18,14 @@ interface WordDefinitionProps {
 
 export function WordDefinition({ data }: WordDefinitionProps) {
   const [showOrigin, setShowOrigin] = useState(false);
+  const { user } = useAuth();
+  const {
+    isWordSaved,
+    saveWord,
+    unsaveWord,
+    loading: savedLoading,
+  } = useSavedWords();
+  const [actionLoading, setActionLoading] = useState(false);
 
   // If data is null or undefined, don't render anything
   if (!data) {
@@ -27,6 +37,27 @@ export function WordDefinition({ data }: WordDefinitionProps) {
 
   // Check if meanings array exists and has content
   const hasMeanings = data.meanings && data.meanings.length > 0;
+
+  const handleBookmarkClick = async () => {
+    if (!user) {
+      toast.error("Sign in to save words.");
+      return;
+    }
+    setActionLoading(true);
+    try {
+      if (isWordSaved(data.word)) {
+        await unsaveWord(data.word);
+        toast.success("Word removed from your saved words.");
+      } else {
+        await saveWord(data);
+        toast.success("Word saved!");
+      }
+    } catch (err) {
+      toast.error((err as Error).message || "Failed to update saved word.");
+    } finally {
+      setActionLoading(false);
+    }
+  };
 
   return (
     <>
@@ -71,10 +102,16 @@ export function WordDefinition({ data }: WordDefinitionProps) {
             <Button
               variant="outline"
               size="icon"
-              title="Save word"
-              aria-label="Save word"
+              title={isWordSaved(data.word) ? "Unsave word" : "Save word"}
+              aria-label={isWordSaved(data.word) ? "Unsave word" : "Save word"}
+              onClick={handleBookmarkClick}
+              disabled={actionLoading || savedLoading}
             >
-              <Bookmark className="h-4 w-4" />
+              {isWordSaved(data.word) ? (
+                <BookmarkCheck className="h-4 w-4 text-primary" />
+              ) : (
+                <Bookmark className="h-4 w-4" />
+              )}
             </Button>
           </div>
         </div>
