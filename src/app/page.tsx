@@ -5,8 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, BookOpen, AlertCircle } from "lucide-react";
 import { WordDefinition } from "@/components/word-definition";
-import { WordData } from "@/services/dictionary/types";
-import { fetchWordDefinition } from "@/services/dictionary";
+import { WordData } from "@/services/dictionary-api/types";
+import { fetchWordDefinition } from "@/services/dictionary-api";
 import { Spinner } from "@/components/ui/spinner";
 
 export function Home() {
@@ -76,21 +76,12 @@ export function Home() {
             />
             <Button type="submit" size="icon" disabled={isSearching}>
               {isSearching ? (
-                <Spinner size="sm" className="border-primary-foreground" />
+                <Spinner size="sm" color="currentColor" className="mx-auto" />
               ) : (
                 <Search className="h-4 w-4" />
               )}
             </Button>
           </form>
-
-          {isSearching && (
-            <div className="mt-6 flex flex-col items-center justify-center">
-              <Spinner size="md" className="mb-2" />
-              <p className="text-sm text-muted-foreground">
-                Searching dictionary...
-              </p>
-            </div>
-          )}
 
           {error && !isSearching && (
             <div className="mt-6 p-4 border border-destructive/50 bg-destructive/10 rounded-md flex items-start gap-3 max-w-md animate-in fade-in-50 duration-300">

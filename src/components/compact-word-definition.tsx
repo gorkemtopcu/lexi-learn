@@ -3,8 +3,9 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Volume2, Info, ChevronDown, ChevronUp } from "lucide-react";
-import { WordData } from "@/services/dictionary/types";
-import { useAudioPlayer } from "@/hooks";
+import { WordData } from "@/services/dictionary-api/types";
+import { playAudio } from "@/utils/audio";
+import { toast } from "sonner";
 
 interface CompactWordDefinitionProps {
   data: WordData | null;
@@ -13,7 +14,6 @@ interface CompactWordDefinitionProps {
 export function CompactWordDefinition({ data }: CompactWordDefinitionProps) {
   const [expanded, setExpanded] = useState(false);
   const [showOrigin, setShowOrigin] = useState(false);
-  const { audioError, handlePlayAudio } = useAudioPlayer();
 
   // If data is null or undefined, don't render anything
   if (!data) {
@@ -63,7 +63,13 @@ export function CompactWordDefinition({ data }: CompactWordDefinitionProps) {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => handlePlayAudio(audioUrl)}
+                onClick={async () => {
+                  try {
+                    await playAudio(audioUrl);
+                  } catch {
+                    toast.error("Failed to play audio. Please try again.");
+                  }
+                }}
                 title="Listen to pronunciation"
                 className="h-8 w-8"
               >
@@ -78,13 +84,6 @@ export function CompactWordDefinition({ data }: CompactWordDefinitionProps) {
             <p className="text-sm line-clamp-2">
               {firstDefinition || "No definition available"}
             </p>
-          </div>
-        )}
-
-        {/* Display audio error if any */}
-        {audioError && (
-          <div className="mt-2 p-1.5 bg-destructive/10 border border-destructive/30 rounded text-xs text-destructive animate-in fade-in-50 duration-150">
-            {audioError}
           </div>
         )}
       </div>

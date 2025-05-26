@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Volume2, Info } from "lucide-react";
-import { WordData } from "@/services/dictionary/types";
+import { Volume2, Info, Bookmark } from "lucide-react";
+import { WordData } from "@/services/dictionary-api/types";
+import { playAudio } from "@/utils/audio";
+import { toast } from "sonner";
 
 // Re-export WordData for backward compatibility
 export type { WordData };
@@ -28,15 +30,15 @@ export function WordDefinition({ data }: WordDefinitionProps) {
 
   return (
     <>
-      <div className="w-full max-w-2xl mx-auto bg-card border rounded-lg p-6 pb-8 mt-4 text-left">
-        <div className="flex justify-between items-start mb-4">
+      <div className="w-full max-w-2xl min-w-[320px] mx-auto bg-card border rounded-lg p-6 pb-8 mt-4 text-left">
+        <div className="flex justify-between items-start mb-4 gap-6">
           <div>
             <h2 className="text-3xl font-bold">{data.word}</h2>
             {data.phonetic && (
               <p className="text-muted-foreground">{data.phonetic}</p>
             )}
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 mt-1">
             {data.origin && (
               <Button
                 variant="outline"
@@ -52,13 +54,28 @@ export function WordDefinition({ data }: WordDefinitionProps) {
               <Button
                 variant="outline"
                 size="icon"
-                onClick={() => {}}
+                onClick={async () => {
+                  try {
+                    await playAudio(audioUrl);
+                  } catch (err) {
+                    toast.error("Failed to play audio. Please try again.");
+                    console.error("Failed to play audio:", err);
+                  }
+                }}
                 title="Listen to pronunciation"
                 aria-label="Play pronunciation"
               >
                 <Volume2 className="h-4 w-4" />
               </Button>
             )}
+            <Button
+              variant="outline"
+              size="icon"
+              title="Save word"
+              aria-label="Save word"
+            >
+              <Bookmark className="h-4 w-4" />
+            </Button>
           </div>
         </div>
 

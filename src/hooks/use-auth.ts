@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase-client";
 
 export function useAuth() {
-  const [user, setUser] = useState<null | { email: string }>(null);
+  const [user, setUser] = useState<null | { id: string; email: string }>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -11,11 +11,11 @@ export function useAuth() {
     let ignore = false;
     async function restoreSession() {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!ignore) setUser(session?.user ? { email: session.user.email ?? "" } : null);
+      if (!ignore) setUser(session?.user ? { id: session.user.id, email: session.user.email ?? "" } : null);
     }
     restoreSession();
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ? { email: session.user.email ?? "" } : null);
+      setUser(session?.user ? { id: session.user.id, email: session.user.email ?? "" } : null);
     });
     return () => {
       ignore = true;

@@ -14,7 +14,7 @@ import { SignInForm } from "./sign-in-form";
 import { SignUpForm } from "./sign-up-form";
 import { ProfilePanel } from "./profile-panel";
 
-export function AuthDialog() {
+export function AuthDialog({ trigger }: { trigger?: React.ReactNode } = {}) {
   const [mode, setMode] = React.useState<"login" | "signup">("login");
   const [open, setOpen] = React.useState(false);
   const { user, loading, error, setError, signIn, signUp, signOut } = useAuth();
@@ -34,16 +34,20 @@ export function AuthDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          aria-label={user ? "Account" : "Sign in or sign up"}
-        >
-          <User className="h-[1.2rem] w-[1.2rem]" />
-          <span className="sr-only">
-            {user ? "Account" : "Sign in or sign up"}
-          </span>
-        </Button>
+        {trigger ? (
+          trigger
+        ) : (
+          <Button
+            variant="outline"
+            size="icon"
+            aria-label={user ? "Account" : "Sign in or sign up"}
+          >
+            <User className="h-[1.2rem] w-[1.2rem]" />
+            <span className="sr-only">
+              {user ? "Account" : "Sign in or sign up"}
+            </span>
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
