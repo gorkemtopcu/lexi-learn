@@ -123,6 +123,7 @@ export function MyWordsPage() {
                       onClick={handleClearSearch}
                       className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50 transition"
                       title="Clear search"
+                      aria-label="Clear search"
                     >
                       <X className="h-4 w-4" />
                     </button>
