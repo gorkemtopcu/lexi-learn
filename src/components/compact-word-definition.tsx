@@ -172,7 +172,7 @@ export function CompactWordDefinition({ data }: CompactWordDefinitionProps) {
           <div className="space-y-2">
             {data.meanings.map((meaning, index) => (
               <div
-                key={index}
+                key={meaning.partOfSpeech || index}
                 className={`${index === 0 ? "-mt-1 mb-2" : "mb-4"}`}
               >
                 <h4 className="text-sm font-semibold mb-1 inline-block bg-primary/10 px-2 py-0.5 rounded-md">
