@@ -86,11 +86,8 @@ types/
 
 ## 🛤️ Roadmap
 
-- 🌐 Multi-language support
-- 🔊 Audio pronunciation
-- 🕰️ Saved search history per user
-- 🎨 User-defined themes and accessibility settings
-- 👤 Auth-protected features with Supabase Auth
+- Forgot your password implementation
+- Gamification for practicing saved words
 
 ---
 
