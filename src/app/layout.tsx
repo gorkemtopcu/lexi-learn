@@ -19,7 +19,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Lexi Learn",
-  description: "A language learning application",
+  description: "Master vocabulary effortlessly with instant word definitions, pronunciation guides, etymology, and personalized word collections. Your intelligent companion for expanding language skills.",
   icons: {
     icon: "/icon",
     apple: "/apple-icon",
