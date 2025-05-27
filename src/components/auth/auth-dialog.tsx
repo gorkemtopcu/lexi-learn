@@ -58,11 +58,15 @@ export function AuthDialog({ trigger }: { trigger?: React.ReactNode } = {}) {
           </DialogTitle>
           {
             <DialogDescription>
-              {user
-                ? "You are signed in with " + user.email
-                : mode === "login"
-                ? "Welcome back! Please enter your credentials."
-                : "Create a new account to get started."}
+              {user ? (
+                <>
+                  You are signed in with <strong>{user.email}</strong>
+                </>
+              ) : mode === "login" ? (
+                "Welcome back! Please enter your credentials."
+              ) : (
+                "Create a new account to get started."
+              )}
             </DialogDescription>
           }
         </DialogHeader>

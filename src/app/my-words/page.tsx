@@ -58,11 +58,13 @@ export function MyWordsPage() {
         {user && (
           <button
             onClick={() => setShowAchievements(!showAchievements)}
-            className="ml-auto flex items-center gap-2 px-3 py-1.5 rounded-md border border-border bg-background text-foreground font-medium shadow-sm transition hover:bg-primary/10 focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"
+            className="ml-auto flex items-center gap-2 p-2 sm:px-3 sm:py-1.5 rounded-md border border-border bg-background text-foreground font-medium shadow-sm transition hover:bg-primary/10 focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"
             title={showAchievements ? "Hide Achievements" : "Show Achievements"}
           >
             <Trophy className="h-4 w-4" />
-            {showAchievements ? "Hide Achievements" : "Show Achievements"}
+            <span className="hidden sm:inline">
+              {showAchievements ? "Hide Achievements" : "Show Achievements"}
+            </span>
           </button>
         )}
       </h1>
@@ -133,10 +135,10 @@ export function MyWordsPage() {
                 <button
                   type="submit"
                   disabled={!searchInput.trim()}
-                  className="px-4 py-2 rounded-md bg-primary text-primary-foreground font-medium shadow hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  className="p-2 sm:px-4 sm:py-2 rounded-md bg-primary text-primary-foreground font-medium shadow hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 >
                   <Search className="h-4 w-4" />
-                  Search
+                  <span className="hidden sm:inline">Search</span>
                 </button>
               </form>
               {searchQuery && (
