@@ -20,7 +20,7 @@
 - **Frontend:** React, TypeScript, Next.js 14 (App Router)
 - **UI/UX:** Shadcn UI, Radix UI, Tailwind CSS, Tailwind Aria
 - **Backend:** Supabase (PostgreSQL, RLS enabled)
-- **API:** Dictionary API ([docs](https://api.dictionaryapi.dev))
+- **API:** Dictionary API ([docs](https://dictionaryapi.dev/))
 
 ---
 
