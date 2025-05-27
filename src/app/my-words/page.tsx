@@ -136,8 +136,8 @@ export function MyWordsPage() {
                 <button
                   type="submit"
                   disabled={!searchInput.trim()}
+                  aria-label="Search"
                   className="p-2 sm:px-4 sm:py-2 rounded-md bg-primary text-primary-foreground font-medium shadow hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                >
                   <Search className="h-4 w-4" />
                   <span className="hidden sm:inline">Search</span>
                 </button>
