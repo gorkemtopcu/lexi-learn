@@ -60,6 +60,7 @@ export function MyWordsPage() {
             onClick={() => setShowAchievements(!showAchievements)}
             className="ml-auto flex items-center gap-2 p-2 sm:px-3 sm:py-1.5 rounded-md border border-border bg-background text-foreground font-medium shadow-sm transition hover:bg-primary/10 focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"
             title={showAchievements ? "Hide Achievements" : "Show Achievements"}
+            aria-label={showAchievements ? "Hide Achievements" : "Show Achievements"}
           >
             <Trophy className="h-4 w-4" />
             <span className="hidden sm:inline">
