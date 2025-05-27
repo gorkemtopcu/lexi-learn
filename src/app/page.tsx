@@ -9,7 +9,7 @@ import { WordData } from "@/services/dictionary-api/types";
 import { fetchWordDefinition } from "@/services/dictionary-api";
 import { Spinner } from "@/components/ui/spinner";
 
-export function Home() {
+export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResult, setSearchResult] = useState<WordData | null>(null);
   const [isSearching, setIsSearching] = useState(false);
@@ -100,5 +100,3 @@ export function Home() {
     </div>
   );
 }
-
-export default Home;

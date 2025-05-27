@@ -19,7 +19,7 @@ import { WordData } from "@/services/dictionary-api/types";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 
-export function MyWordsPage() {
+export default function MyWordsPage() {
   const { user } = useAuth();
   const {
     words,
@@ -254,5 +254,3 @@ export function MyWordsPage() {
     </div>
   );
 }
-
-export default MyWordsPage;

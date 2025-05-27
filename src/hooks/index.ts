@@ -2,4 +2,5 @@
  * Hooks index file - exports all custom hooks
  */
 
-export * from './use-audio-player';
+export * from './use-auth';
+export * from './use-saved-words';
