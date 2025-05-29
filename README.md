@@ -2,13 +2,13 @@
 
 **LexiLearn** is a fast, type-safe, and accessible web app designed for language learners. Search any word to explore its definition, usage, and structure through a performant, scalable architecture aligned with Next.js App Router standards.
 
-## 📱 Preview
-
-![Screen Recording 2025-05-30 at 00 17 24_hq](https://github.com/user-attachments/assets/d82e1ea6-29a8-4f00-8655-e2203f052a70)
-
 ## 🌐 Live Demo
 
 **Production URL:** [https://lexi-learn-ten.vercel.app/](https://lexi-learn-ten.vercel.app/)
+
+## 📱 Preview
+
+![Screen Recording 2025-05-30 at 00 17 24_hq](https://github.com/user-attachments/assets/d82e1ea6-29a8-4f00-8655-e2203f052a70)
 
 ---
 
