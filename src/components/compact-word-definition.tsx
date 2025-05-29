@@ -75,9 +75,8 @@ export function CompactWordDefinition({ data }: CompactWordDefinitionProps) {
                 onClick={async () => {
                   try {
                     await playAudio(audioUrl);
-                  } catch (err) {
+                  } catch {
                     toast.error("Failed to play audio. Please try again.");
-                    console.error("Failed to play audio:", err);
                   }
                 }}
                 title="Listen to pronunciation"

@@ -37,9 +37,7 @@ export default function Home() {
       // Update state based on the service result
       setSearchResult(result.data);
       setError(result.error);
-    } catch (err) {
-      // Handle any unexpected errors not caught by the service
-      console.error("Unexpected error:", err);
+    } catch {
       setError("An unexpected error occurred. Please try again later.");
     } finally {
       setIsSearching(false);
