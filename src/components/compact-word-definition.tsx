@@ -42,7 +42,6 @@ export function CompactWordDefinition({ data }: CompactWordDefinitionProps) {
 
   // Get the first definition for compact view
   const firstDefinition = data.meanings?.[0]?.definitions?.[0]?.definition;
-  const partOfSpeech = data.meanings?.[0]?.partOfSpeech;
 
   return (
     <div className="w-full bg-card border rounded-lg overflow-hidden text-left relative px-1 sm:px-0">
@@ -52,11 +51,6 @@ export function CompactWordDefinition({ data }: CompactWordDefinitionProps) {
           <div>
             <div className="flex items-center gap-2">
               <h3 className="text-xl font-bold">{data.word}</h3>
-              {partOfSpeech && (
-                <span className="text-xs bg-primary/10 px-2 py-0.5 rounded-full">
-                  {partOfSpeech}
-                </span>
-              )}
             </div>
             {data.phonetic && (
               <p className="text-sm text-muted-foreground">{data.phonetic}</p>
@@ -172,7 +166,7 @@ export function CompactWordDefinition({ data }: CompactWordDefinitionProps) {
           <div className="space-y-2">
             {data.meanings.map((meaning, index) => (
               <div
-                key={meaning.partOfSpeech || index}
+                key={`${meaning.partOfSpeech}-${index}`}
                 className={`${index === 0 ? "-mt-1 mb-2" : "mb-4"}`}
               >
                 <h4 className="text-sm font-semibold mb-1 inline-block bg-primary/10 px-2 py-0.5 rounded-md">
