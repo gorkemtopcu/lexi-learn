@@ -128,67 +128,109 @@ export function AuthDialog({ trigger }: { trigger?: React.ReactNode } = {}) {
             }}
             wordCount={wordCount}
           />
-        ) : mode === "login" ? (
-          <>
-            <SignInForm
-              loading={loading}
-              error={error}
-              setError={setError}
-              signIn={signIn}
-              onSuccess={handleSuccess}
-              onForgotPassword={() => {
-                setMode("forgot-password");
-                setError(null);
-              }}
-            />
-            <div className="text-sm text-muted-foreground text-center mt-4">
-              Don&apos;t have an account?{" "}
-              <button
-                type="button"
-                className="text-primary underline font-medium hover:text-primary/80 focus:outline-none"
-                onClick={() => {
-                  setMode("signup");
-                  setError(null);
-                }}
-                disabled={loading}
-              >
-                Sign up
-              </button>
-            </div>
-          </>
-        ) : mode === "signup" ? (
-          <>
-            <SignUpForm
-              loading={loading}
-              error={error}
-              setError={setError}
-              signUp={signUp}
-              onSuccess={handleSuccess}
-            />
-            <div className="text-sm text-muted-foreground text-center mt-4">
-              Already have an account?{" "}
-              <button
-                type="button"
-                className="text-primary underline font-medium hover:text-primary/80 focus:outline-none"
-                onClick={() => {
-                  setMode("login");
-                  setError(null);
-                }}
-                disabled={loading}
-              >
-                Log in
-              </button>
-            </div>
-          </>
         ) : (
-          <ForgotPasswordForm
-            loading={loading}
-            error={error}
-            success={resetSuccess}
-            setError={setError}
-            resetPassword={handleResetPassword}
-            onBack={handleBackToLogin}
-          />
+          (() => {
+            switch (mode) {
+              case "login":
+                return (
+                  <>
+                    <SignInForm
+                      loading={loading}
+                      error={error}
+                      setError={setError}
+                      signIn={signIn}
+                      onSuccess={handleSuccess}
+                      onForgotPassword={() => {
+                        setMode("forgot-password");
+                        setError(null);
+                      }}
+                    />
+                    <div className="text-sm text-muted-foreground text-center mt-4">
+                      Don&apos;t have an account?{" "}
+                      <button
+                        type="button"
+                        className="text-primary underline font-medium hover:text-primary/80 focus:outline-none"
+                        onClick={() => {
+                          setMode("signup");
+                          setError(null);
+                        }}
+                        disabled={loading}
+                      >
+                        Sign up
+                      </button>
+                    </div>
+                  </>
+                );
+              case "signup":
+                return (
+                  <>
+                    <SignUpForm
+                      loading={loading}
+                      error={error}
+                      setError={setError}
+                      signUp={signUp}
+                      onSuccess={handleSuccess}
+                    />
+                    <div className="text-sm text-muted-foreground text-center mt-4">
+                      Already have an account?{" "}
+                      <button
+                        type="button"
+                        className="text-primary underline font-medium hover:text-primary/80 focus:outline-none"
+                        onClick={() => {
+                          setMode("login");
+                          setError(null);
+                        }}
+                        disabled={loading}
+                      >
+                        Log in
+                      </button>
+                    </div>
+                  </>
+                );
+              case "forgot-password":
+                return (
+                  <ForgotPasswordForm
+                    loading={loading}
+                    error={error}
+                    success={resetSuccess}
+                    setError={setError}
+                    resetPassword={handleResetPassword}
+                    onBack={handleBackToLogin}
+                  />
+                );
+              default:
+                // Fallback to login mode for any unexpected mode value
+                return (
+                  <>
+                    <SignInForm
+                      loading={loading}
+                      error={error}
+                      setError={setError}
+                      signIn={signIn}
+                      onSuccess={handleSuccess}
+                      onForgotPassword={() => {
+                        setMode("forgot-password");
+                        setError(null);
+                      }}
+                    />
+                    <div className="text-sm text-muted-foreground text-center mt-4">
+                      Don&apos;t have an account?{" "}
+                      <button
+                        type="button"
+                        className="text-primary underline font-medium hover:text-primary/80 focus:outline-none"
+                        onClick={() => {
+                          setMode("signup");
+                          setError(null);
+                        }}
+                        disabled={loading}
+                      >
+                        Sign up
+                      </button>
+                    </div>
+                  </>
+                );
+            }
+          })()
         )}
       </DialogContent>
     </Dialog>
