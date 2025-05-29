@@ -8,7 +8,8 @@
 
 ## 📱 Preview
 
-![LexiLearn App Preview](./public/preview.gif)
+![Screen Recording 2025-05-30 at 00 17 24_hq](https://github.com/user-attachments/assets/d82e1ea6-29a8-4f00-8655-e2203f052a70)
+
 
 ---
 
