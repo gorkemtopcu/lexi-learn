@@ -92,10 +92,21 @@ export const ACHIEVEMENTS: Achievement[] = [
   },
 ];
 
+// Default achievement for users with 0 words
+const DEFAULT_ACHIEVEMENT: Achievement = {
+  id: "getting-started",
+  title: "Getting Started",
+  description: "Ready to begin your vocabulary journey!",
+  wordCount: 0,
+  icon: "🚀",
+  color: "text-gray-600",
+  bgColor: "bg-gray-100 dark:bg-gray-900/20",
+};
+
 export function getCurrentAchievement(wordCount: number): Achievement {
   // Find the highest achievement the user has earned
   const earned = ACHIEVEMENTS.filter(achievement => wordCount >= achievement.wordCount);
-  return earned.length > 0 ? earned[earned.length - 1] : ACHIEVEMENTS[0];
+  return earned.length > 0 ? earned[earned.length - 1] : DEFAULT_ACHIEVEMENT;
 }
 
 export function getNextAchievement(wordCount: number): Achievement | null {
@@ -116,14 +127,24 @@ export function getProgressToNext(wordCount: number): { current: number; target:
     };
   }
   
-  const previousTarget = currentAchievement.wordCount;
+  // Determine thresholds to avoid division by zero and negative progress
   const nextTarget = nextAchievement.wordCount;
+  // For users below the first threshold, previousTarget should be 0
+  const previousTarget =
+    wordCount < currentAchievement.wordCount
+      ? 0
+      : currentAchievement.wordCount;
   const progressInCurrentLevel = wordCount - previousTarget;
   const totalLevelRange = nextTarget - previousTarget;
+  // Calculate percentage safely, defaulting to 0 if range is non-positive
+  const percentage =
+    totalLevelRange > 0
+      ? Math.min(100, Math.round((progressInCurrentLevel / totalLevelRange) * 100))
+      : 0;
   
   return {
     current: progressInCurrentLevel,
     target: totalLevelRange,
-    percentage: Math.min(100, Math.round((progressInCurrentLevel / totalLevelRange) * 100)),
+    percentage,
   };
 } 
