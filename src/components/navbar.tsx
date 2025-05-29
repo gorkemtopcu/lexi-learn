@@ -20,11 +20,20 @@ import {
 export function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = React.useState(false);
+  const [mounted, setMounted] = React.useState(false);
+
+  // Ensure component is mounted before using client-side features
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Close drawer when pathname changes (navigation occurs)
   React.useEffect(() => {
     setOpen(false);
   }, [pathname]);
+
+  // Use a safe pathname that won't cause hydration mismatch
+  const safePathname = mounted ? pathname : "/";
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -41,7 +50,7 @@ export function Navbar() {
             href="/"
             className={cn(
               "transition-colors hover:text-foreground/80",
-              pathname === "/"
+              safePathname === "/"
                 ? "text-foreground font-medium"
                 : "text-foreground/60"
             )}
@@ -55,7 +64,7 @@ export function Navbar() {
             href="/my-words"
             className={cn(
               "transition-colors hover:text-foreground/80",
-              pathname === "/my-words"
+              safePathname === "/my-words"
                 ? "text-foreground font-medium"
                 : "text-foreground/60"
             )}
@@ -98,7 +107,7 @@ export function Navbar() {
                   href="/"
                   className={cn(
                     "flex items-center gap-3 py-3 px-2 rounded-md text-sm transition-colors hover:bg-accent hover:text-accent-foreground",
-                    pathname === "/"
+                    safePathname === "/"
                       ? "bg-accent text-accent-foreground font-medium"
                       : "text-foreground/60"
                   )}
@@ -110,7 +119,7 @@ export function Navbar() {
                   href="/my-words"
                   className={cn(
                     "flex items-center gap-3 py-3 px-2 rounded-md text-sm transition-colors hover:bg-accent hover:text-accent-foreground",
-                    pathname === "/my-words"
+                    safePathname === "/my-words"
                       ? "bg-accent text-accent-foreground font-medium"
                       : "text-foreground/60"
                   )}

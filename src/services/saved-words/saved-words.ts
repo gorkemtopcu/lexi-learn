@@ -36,7 +36,6 @@ export async function getSavedWords(
   { limit = 20, offset = 0 }: { limit?: number; offset?: number } = {}
 ): Promise<{ words: WordData[]; total: number; error?: string }> {
   try {
-    console.log("getSavedWords", userId, limit, offset);
     const { data, error, count } = await supabase
       .from("saved_words")
       .select("word_data", { count: "exact" })
@@ -66,7 +65,6 @@ export async function searchSavedWords(
   { limit = 20, offset = 0 }: { limit?: number; offset?: number } = {}
 ): Promise<{ words: WordData[]; total: number; error?: string }> {
   try {
-    console.log("searchSavedWords", userId, searchQuery, limit, offset);
     const { data, error, count } = await supabase
       .from("saved_words")
       .select("word_data", { count: "exact" })

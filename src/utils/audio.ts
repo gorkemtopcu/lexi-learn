@@ -22,13 +22,10 @@ export function playAudio(audioUrl: string): Promise<void> {
         ? `https:${audioUrl}` 
         : `https://${audioUrl}`;
     
-    console.log("Playing audio from:", formattedUrl);
-    
     const audio = new Audio(formattedUrl);
     
     // Add event listeners for better error handling
     audio.addEventListener('error', (e) => {
-      console.error("Audio playback error:", e);
       reject(e);
     });
     
@@ -38,7 +35,6 @@ export function playAudio(audioUrl: string): Promise<void> {
     
     // Play the audio
     audio.play().catch(error => {
-      console.error("Error playing audio:", error);
       reject(error);
     });
   });
