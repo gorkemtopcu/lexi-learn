@@ -8,6 +8,7 @@ export interface SignInFormProps {
   setError: (err: string | null) => void;
   signIn: (email: string, password: string) => Promise<boolean>;
   onSuccess: () => void;
+  onForgotPassword?: () => void;
 }
 
 export function SignInForm({
@@ -16,6 +17,7 @@ export function SignInForm({
   setError,
   signIn,
   onSuccess,
+  onForgotPassword,
 }: SignInFormProps) {
   const emailRef = React.useRef<HTMLInputElement>(null);
 
@@ -56,9 +58,21 @@ export function SignInForm({
         />
       </div>
       <div>
-        <label htmlFor="password" className="block text-sm font-medium mb-1">
-          Password
-        </label>
+        <div className="flex items-center justify-between mb-1">
+          <label htmlFor="password" className="block text-sm font-medium">
+            Password
+          </label>
+          {onForgotPassword && (
+            <button
+              type="button"
+              className="text-sm text-primary underline hover:text-primary/80 focus:outline-none"
+              onClick={onForgotPassword}
+              disabled={loading}
+            >
+              Forgot password?
+            </button>
+          )}
+        </div>
         <Input
           id="password"
           name="password"
