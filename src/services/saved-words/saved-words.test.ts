@@ -2,6 +2,12 @@ import { saveWord, getSavedWords } from './saved-words';
 import { supabase } from '@/lib/supabase-client';
 import { WordData } from '@/services/dictionary-api/types';
 
+// Mock the auth error handler
+jest.mock('@/lib/auth-error-handler', () => ({
+  handleAuthError: jest.fn(),
+  isAuthError: jest.fn(() => false),
+}));
+
 jest.mock('@/lib/supabase-client', () => ({
   supabase: {
     from: jest.fn()
@@ -47,8 +53,9 @@ describe('saved-words service', () => {
     });
 
     it('should return error if upsert fails', async () => {
+      const errorObj = new Error('fail');
       mockSupabaseFrom.mockReturnValueOnce({
-        upsert: jest.fn().mockResolvedValue({ error: { message: 'fail' } })
+        upsert: jest.fn().mockResolvedValue({ error: errorObj })
       });
       const result = await saveWord(userId, wordData);
       expect(result).toEqual({ success: false, error: 'fail' });
@@ -66,26 +73,37 @@ describe('saved-words service', () => {
       mockSupabaseFrom.mockReturnValueOnce({
         select: jest.fn().mockReturnThis(),
         eq: jest.fn().mockReturnThis(),
-        order: jest.fn().mockResolvedValue({ data: [ { word_data: wordData } ], error: null })
+        order: jest.fn().mockReturnThis(),
+        range: jest.fn().mockResolvedValue({ 
+          data: [{ word_data: wordData }], 
+          error: null, 
+          count: 1 
+        })
       });
       const result = await getSavedWords(userId);
-      expect(result).toEqual({ words: [wordData] });
+      expect(result).toEqual({ words: [wordData], total: 1 });
     });
 
     it('should return error if fetch fails', async () => {
+      const errorObj = new Error('fetch error');
       mockSupabaseFrom.mockReturnValueOnce({
         select: jest.fn().mockReturnThis(),
         eq: jest.fn().mockReturnThis(),
-        order: jest.fn().mockResolvedValue({ data: null, error: { message: 'fetch error' } })
+        order: jest.fn().mockReturnThis(),
+        range: jest.fn().mockResolvedValue({ 
+          data: null, 
+          error: errorObj, 
+          count: 0 
+        })
       });
       const result = await getSavedWords(userId);
-      expect(result).toEqual({ words: [], error: 'fetch error' });
+      expect(result).toEqual({ words: [], total: 0, error: 'fetch error' });
     });
 
     it('should handle exceptions', async () => {
       mockSupabaseFrom.mockImplementationOnce(() => { throw new Error('crash'); });
       const result = await getSavedWords(userId);
-      expect(result).toEqual({ words: [], error: 'crash' });
+      expect(result).toEqual({ words: [], total: 0, error: 'crash' });
     });
   });
 }); 

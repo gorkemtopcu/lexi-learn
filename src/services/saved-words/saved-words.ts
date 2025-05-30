@@ -1,5 +1,22 @@
 import { supabase } from "@/lib/supabase-client";
 import { WordData } from "@/services/dictionary-api/types";
+import { handleAuthError, isAuthError } from "@/lib/auth-error-handler";
+
+/**
+ * Handles errors from Supabase operations with proper auth error handling
+ */
+function handleSupabaseError(error: unknown): string {
+  if (isAuthError(error)) {
+    const authErrorResult = handleAuthError(error);
+    return authErrorResult.userFriendlyMessage;
+  }
+  
+  if (error instanceof Error) {
+    return error.message;
+  }
+  
+  return 'An unexpected error occurred';
+}
 
 /**
  * Saves a word for a user in Supabase.
@@ -16,12 +33,14 @@ export async function saveWord(userId: string, wordData: WordData): Promise<{ su
         word_data: wordData,
       },
     ], { onConflict: "user_id,word" });
+    
     if (error) {
-      return { success: false, error: error.message };
+      return { success: false, error: handleSupabaseError(error) };
     }
+    
     return { success: true };
   } catch (err) {
-    return { success: false, error: (err as Error).message };
+    return { success: false, error: handleSupabaseError(err) };
   }
 }
 
@@ -42,13 +61,15 @@ export async function getSavedWords(
       .eq("user_id", userId)
       .order("created_at", { ascending: false })
       .range(offset, offset + limit - 1);
+      
     if (error) {
-      return { words: [], total: 0, error: error.message };
+      return { words: [], total: 0, error: handleSupabaseError(error) };
     }
+    
     const words = (data ?? []).map((row: { word_data: WordData }) => row.word_data);
     return { words, total: count ?? 0 };
   } catch (err) {
-    return { words: [], total: 0, error: (err as Error).message };
+    return { words: [], total: 0, error: handleSupabaseError(err) };
   }
 }
 
@@ -72,13 +93,15 @@ export async function searchSavedWords(
       .ilike("word", `%${searchQuery}%`)
       .order("created_at", { ascending: false })
       .range(offset, offset + limit - 1);
+      
     if (error) {
-      return { words: [], total: 0, error: error.message };
+      return { words: [], total: 0, error: handleSupabaseError(error) };
     }
+    
     const words = (data ?? []).map((row: { word_data: WordData }) => row.word_data);
     return { words, total: count ?? 0 };
   } catch (err) {
-    return { words: [], total: 0, error: (err as Error).message };
+    return { words: [], total: 0, error: handleSupabaseError(err) };
   }
 }
 
@@ -95,11 +118,13 @@ export async function unsaveWord(userId: string, word: string): Promise<{ succes
       .delete()
       .eq("user_id", userId)
       .eq("word", word);
+      
     if (error) {
-      return { success: false, error: error.message };
+      return { success: false, error: handleSupabaseError(error) };
     }
+    
     return { success: true };
   } catch (err) {
-    return { success: false, error: (err as Error).message };
+    return { success: false, error: handleSupabaseError(err) };
   }
 } 
