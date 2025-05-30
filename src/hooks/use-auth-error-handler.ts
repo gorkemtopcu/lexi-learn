@@ -18,7 +18,7 @@ export function useAuthErrorHandler() {
         if (showToast) {
           toast.error('Session Expired', {
             description: authErrorResult.userFriendlyMessage,
-            duration: SESSION_EXPIRED_DURATION,
+            duration: 4000,
           });
         }
         
