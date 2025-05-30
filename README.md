@@ -16,8 +16,7 @@
 
 - 🔍 Lookup any word with real-time results
 - 📚 See definitions, usage examples, and parts of speech
-- 🌐 Multi-language translation support (planned)
-- 🔊 Pronunciation and etymology (upcoming)
+- 🔊 Pronunciation and etymology
 - ⚡ Optimized with Next.js 14, Supabase, and Shadcn UI
 - ♿ Fully accessible, mobile-first responsive design using Tailwind Aria and Radix UI
 
