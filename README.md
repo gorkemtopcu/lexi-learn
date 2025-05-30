@@ -94,8 +94,8 @@ types/
 
 ## 🛤️ Roadmap
 
-- Forgot your password implementation
 - Gamification for practicing saved words
+- Google Sign in
 
 ---
 
