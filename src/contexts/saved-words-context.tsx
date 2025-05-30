@@ -15,6 +15,7 @@ import {
 } from "@/services/saved-words/saved-words";
 import { WordData } from "@/services/dictionary-api/types";
 import { useAuth } from "@/hooks/use-auth";
+import { isAuthError, handleAuthError } from "@/lib/auth-error-handler";
 
 interface SavedWordsContextValue {
   words: WordData[];
@@ -52,38 +53,67 @@ export const SavedWordsProvider: React.FC<{ children: React.ReactNode }> = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearching, setIsSearching] = useState(false);
 
+  // Handle errors with proper auth error handling
+  const handleError = useCallback((err: unknown) => {
+    if (isAuthError(err)) {
+      const authErrorResult = handleAuthError(err);
+      setError(authErrorResult.userFriendlyMessage);
+
+      if (authErrorResult.shouldSignOut) {
+        // Clear local state when user needs to sign out
+        setWords([]);
+        setTotal(0);
+        console.warn(
+          "Auth error in saved words context:",
+          authErrorResult.originalError
+        );
+      }
+    } else {
+      const errorMessage =
+        err instanceof Error ? err.message : "An unexpected error occurred";
+      setError(errorMessage);
+      console.error("Non-auth error in saved words context:", err);
+    }
+  }, []);
+
   const fetchWords = useCallback(async () => {
     if (!user) {
       setWords([]);
       setTotal(0);
       setLoading(false);
+      setError(null);
       return;
     }
+
     setLoading(true);
     setError(null);
+
     try {
       const offset = (page - 1) * pageSize;
-      const {
-        words: fetchedWords,
-        total: fetchedTotal,
-        error,
-      } = searchQuery
+      const result = searchQuery
         ? await searchSavedWords(user.id, searchQuery, {
             limit: pageSize,
             offset,
           })
         : await getSavedWords(user.id, { limit: pageSize, offset });
-      if (error) setError(error);
-      setWords(fetchedWords);
-      setTotal(fetchedTotal);
+
+      if (result.error) {
+        handleError(new Error(result.error));
+        setWords([]);
+        setTotal(0);
+      } else {
+        setWords(result.words);
+        setTotal(result.total);
+        setError(null);
+      }
     } catch (err) {
-      setError((err as Error).message);
+      handleError(err);
       setWords([]);
       setTotal(0);
     } finally {
       setLoading(false);
     }
-  }, [user, page, pageSize, searchQuery]);
+  }, [user, page, pageSize, searchQuery, handleError]);
 
   useEffect(() => {
     fetchWords();
@@ -96,33 +126,63 @@ export const SavedWordsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const saveWord = useCallback(
     async (wordData: WordData) => {
-      if (!user) return;
-      const { success } = await saveWordApi(user.id, wordData);
-      if (success) {
-        // If the word is not in the current page and the page is the first, prepend it
-        setWords((prev) => {
-          if (page === 1 && !searchQuery) {
-            const newList = [wordData, ...prev];
-            return newList.slice(0, pageSize);
-          }
-          return prev;
-        });
-        setTotal((prev) => prev + 1);
+      if (!user) {
+        setError("You must be signed in to save words");
+        return;
+      }
+
+      try {
+        const result = await saveWordApi(user.id, wordData);
+
+        if (result.error) {
+          handleError(new Error(result.error));
+          return;
+        }
+
+        if (result.success) {
+          // If the word is not in the current page and the page is the first, prepend it
+          setWords((prev) => {
+            if (page === 1 && !searchQuery) {
+              const newList = [wordData, ...prev];
+              return newList.slice(0, pageSize);
+            }
+            return prev;
+          });
+          setTotal((prev) => prev + 1);
+          setError(null);
+        }
+      } catch (err) {
+        handleError(err);
       }
     },
-    [user, page, pageSize, searchQuery]
+    [user, page, pageSize, searchQuery, handleError]
   );
 
   const unsaveWord = useCallback(
     async (word: string) => {
-      if (!user) return;
-      const { success } = await unsaveWordApi(user.id, word);
-      if (success) {
-        setWords((prev) => prev.filter((w) => w.word !== word));
-        setTotal((prev) => Math.max(0, prev - 1));
+      if (!user) {
+        setError("You must be signed in to unsave words");
+        return;
+      }
+
+      try {
+        const result = await unsaveWordApi(user.id, word);
+
+        if (result.error) {
+          handleError(new Error(result.error));
+          return;
+        }
+
+        if (result.success) {
+          setWords((prev) => prev.filter((w) => w.word !== word));
+          setTotal((prev) => Math.max(0, prev - 1));
+          setError(null);
+        }
+      } catch (err) {
+        handleError(err);
       }
     },
-    [user]
+    [user, handleError]
   );
 
   const searchWords = useCallback(async (query: string) => {
