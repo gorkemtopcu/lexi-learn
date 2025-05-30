@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, Home, BookmarkIcon, Menu } from "lucide-react";
+import { BookOpen, Home, BookmarkIcon, Menu, Target } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -74,6 +74,20 @@ export function Navbar() {
               <span>My Words</span>
             </div>
           </Link>
+          <Link
+            href="/practice"
+            className={cn(
+              "transition-colors hover:text-foreground/80",
+              safePathname === "/practice"
+                ? "text-foreground font-medium"
+                : "text-foreground/60"
+            )}
+          >
+            <div className="flex items-center gap-1">
+              <Target className="h-4 w-4" />
+              <span>Practice</span>
+            </div>
+          </Link>
         </nav>
 
         {/* Right side items */}
@@ -126,6 +140,18 @@ export function Navbar() {
                 >
                   <BookmarkIcon className="h-4 w-4" />
                   <span>My Words</span>
+                </Link>
+                <Link
+                  href="/practice"
+                  className={cn(
+                    "flex items-center gap-3 py-3 px-2 rounded-md text-sm transition-colors hover:bg-accent hover:text-accent-foreground",
+                    safePathname === "/practice"
+                      ? "bg-accent text-accent-foreground font-medium"
+                      : "text-foreground/60"
+                  )}
+                >
+                  <Target className="h-4 w-4" />
+                  <span>Practice</span>
                 </Link>
                 <div className="flex items-center gap-3 pt-4 mt-4 border-t border-border">
                   <ThemeToggle />
